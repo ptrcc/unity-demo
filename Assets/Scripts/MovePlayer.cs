@@ -17,39 +17,30 @@ public class MovePlayer : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !jump)
         {
             Jump();
-        }
-        
-        if (jump)
-        {
-            jumpMovement();
         }
     }
     
     private void jumpMovement()
     {
-        rb.AddForce(Vector2.up * jumpForce);
+        rb.AddForce(new Vector2(0, jumpForce),ForceMode2D.Impulse);
         jump = false;
     }
 
     public void Jump()
     {
-        Debug.Log("Jump");
-        Debug.Log(jumpForce);
-        Debug.Log(Vector2.up);
-        Debug.Log(player.transform.position);
         jump = true;
     }
     
-    
     private void FixedUpdate()
     {
-        float horizontalInput = joystick.Horizontal;
-        Vector2 movement = new Vector2(horizontalInput, 0f);
-        rb.velocity = movement * moveSpeed;
-
+        rb.velocity = new Vector2(joystick.Horizontal * moveSpeed, rb.velocity.y);
+        if (jump)
+        {
+            jumpMovement();
+        }
     }
 
 }
